@@ -75,7 +75,7 @@ def faceGlitch(img,face):
     #pixels segments of 40
     div = rd.randint(10,100)
     strp = int(round(face[3]/(div*1.0)))
-    numGlitches = face[3]/strp
+    numGlitches = face[3] // strp
     for itr in range(0,numGlitches):
         #play with the second parameter to increase "glitchiness"
         rng = rd.randint(15,100)
@@ -217,7 +217,7 @@ if __name__ == "__main__":
     eye_cascade = cv2.CascadeClassifier('cascade/haarcascade_eye.xml')
 
     #load main image from local file
-    img = cv2.imread("testImgs/testface9.png")
+    img = cv2.imread("testImgs/olga.JPG")
     height,width,depth = img.shape
 
     #turn image gray for detecting face and eyes
@@ -252,6 +252,7 @@ if __name__ == "__main__":
         #2 - face drag
         #3 - eye censor
         #4 - eye drag
+        faceMod = 4
         if faceMod == 1:
             faceGlitch(img,face)
         elif faceMod == 2:
@@ -261,31 +262,31 @@ if __name__ == "__main__":
         elif faceMod == 4:
             eyeDrag(img,eyes)
 
-    # Add elements to image
-    addElements(img)
-    #if there are no faces, just add more elements!
-    if len(faces) < 1:
-        addElements(img)
+    # # Add elements to image
+    # addElements(img)
+    # #if there are no faces, just add more elements!
+    # if len(faces) < 1:
+    #     addElements(img)
 
-    #randomize if high contrast is used
-    choice = rd.randint(0,1)
-    if choice == 1:
-        #edit alpha and beta to adjust contrast levels
-        img = cv2.convertScaleAbs(img, alpha=1.2, beta=35)
+    # #randomize if high contrast is used
+    # choice = rd.randint(0,1)
+    # if choice == 1:
+    #     #edit alpha and beta to adjust contrast levels
+    #     img = cv2.convertScaleAbs(img, alpha=1.2, beta=35)
 
-    #randomize if high noise is used
-    choice = rd.randint(0,1)
-    if choice == 1:
-        row,col,ch= img.shape
-        mean = 0
-        #edit var to modify the amount of noise in the image
-        var = 15
-        sigma = var**1
-        gauss = np.random.normal(mean,sigma,(row,col,ch))
-        gauss = gauss.reshape(row,col,ch)
-        noisy = (img + gauss)
-        cv2.normalize(noisy,  noisy, 0, 1, cv2.NORM_MINMAX)
-        img = noisy
+    # #randomize if high noise is used
+    # choice = rd.randint(0,1)
+    # if choice == 1:
+    #     row,col,ch= img.shape
+    #     mean = 0
+    #     #edit var to modify the amount of noise in the image
+    #     var = 15
+    #     sigma = var**1
+    #     gauss = np.random.normal(mean,sigma,(row,col,ch))
+    #     gauss = gauss.reshape(row,col,ch)
+    #     noisy = (img + gauss)
+    #     cv2.normalize(noisy,  noisy, 0, 1, cv2.NORM_MINMAX)
+    #     img = noisy
 
     #The following code is useful to determine if faces and eyes
     #are being read correctly. Uncommenting will draw boxes around
@@ -301,3 +302,4 @@ if __name__ == "__main__":
     cv2.namedWindow("pic",cv2.WINDOW_NORMAL)
     cv2.imshow("pic",img)
     cv2.waitKey(0)
+    cv2.imwrite('result.png',img)
